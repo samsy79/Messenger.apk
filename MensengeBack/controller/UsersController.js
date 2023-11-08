@@ -8,42 +8,31 @@ const { secretKey, expiresIn } = require("../config/Confidentials");
 //-----------------Avoir tous les utilisateur de ma base de données---------------------------------------
 const getUsers = async function (req, res) {
   try {
-    const users = await User.find();
+
+  
+    const users = await User.find({Verified:true});
     /* res.status(201).send(Users); */
-    res.status(200).json({ users });
+    res.status(200).json(users);
   } catch (error) {
     res
       .status(500)
       .json({ message: "Oups Something Wrong during recovery", error });
   }
 };
-/*   finally {
-     // await getClient().close();
-    } 
-};
-//---------------------Envoyer un utilisateur dans la base de données------------------------------
-const postUser = async function (req, res) {
+const getOneUser = async function (req, res) {
   try {
-    await DB.collection("Users").insertOne(req.body);
-    res.status(201).send("insertion avec succès ");
-  } catch (error) {
-    res.status(500).json({ message: "Oups Something when sending ", error });
-  }
-   finally {
-      await getClient().close();
-    } 
-}; */
-//---------------Générer un id autoincrémental lors de l'inscription-------------------------------
 
-async function AutoId() {
-  const TableLength = User.find({}).sort({ id: -1 }).limit(1);
-  const notNull = TableLength.length > 0;
-  if (notNull) {
-    return TableLength[0].id + 1;
-  } else {
-    return 1;
+  const user =req.params.id
+    const users = await User.findOne({_id:user});
+    /* res.status(201).send(Users); */
+    res.status(200).json(users);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Oups Something Wrong during recovery", error });
   }
-}
+};
+
 //--------------------pour faire une inscription--------------------------------------------------------------------
 const register = async (req, res, next) => {
   try {
@@ -61,7 +50,7 @@ const register = async (req, res, next) => {
 
     const alreadyExist = await User.findOne({ email });
 
-    if (alreadyExist) {
+   if (alreadyExist) {
       res.status(400).json({
         message: "Already exists ",
       });
@@ -80,12 +69,7 @@ const register = async (req, res, next) => {
     //--------------enrégistrement du random dans la base-----------------
     const hashCode = await bcrypt.hash(randomNumber, hashFrequence);
     console.log(randomNumber);
-    //definition de l'objet a envoyer dans la table
-    /* if(reqName === Number){
-      res.status(400).json({
-        message:"the name can not be a number"
-      })
-    } */
+    
     const newUser = new User({
       email: email,
       password: hashPassword,
@@ -175,11 +159,11 @@ const login = async (req, res, next) => {
     const realPass = userExist.password;
     const passwordIsVerif = await bcrypt.compare(reqPassword, realPass);
 
-    if (!passwordIsVerif) {
+   if (!passwordIsVerif) {
       res.status(400).json({ message: "Review your login details " });
     }
     //generer un token d'auth
-    if (!userExist.Verified) {
+    else if (!userExist.Verified) {
       res.status(400).send({ message: "Accès denied compte non vérifié" });
     } else {
       const token = jwt.sign(
@@ -202,9 +186,7 @@ const login = async (req, res, next) => {
       });
     }
   } catch (e) {
-    res
-      .status(500)
-      .json({ message: "Oups Something Wrong when connecting", e });
+    res.json({ message: "Oups Something Wrong when connecting" });
   }
 };
 //-------------------Avoir tous les informations sur l'utlisateur connecté-----------------------------
@@ -225,4 +207,4 @@ const allInfo = async (req, res, next) => {
   next();
 };
 
-module.exports = { getUsers, register, login, allInfo, verify };
+module.exports = { getUsers, register, login, allInfo, verify,getOneUser};

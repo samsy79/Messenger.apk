@@ -22,6 +22,11 @@ const MessageSchema = new mongoose.Schema({
         required:true,
         ref:User
     },
+    conversation_id:{
+        type:String,
+        required:true,
+        ref:User
+    }
    
 });
 

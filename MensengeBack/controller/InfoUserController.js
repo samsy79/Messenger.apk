@@ -19,40 +19,45 @@ if (!utilisateur_id||!localisation||!birthday||!profession||!tel||!situation){
     res.status(400).json('All fields are require')
 }
 else{
-  const loc = await InfoUser.findOne({utilisateur_id:utilisateur_id,localisation:localisation}) 
+  const loc = await InfoUser.findOne({utilisateur_id:utilisateur_id}) 
   if (loc){
     res.status(400).json('Locaisation already exist ')
   }
-  const anif = await InfoUser.findOne({utilisateur_id:utilisateur_id,birthday:birthday}) 
-  if (anif){
-    res.status(400).json('birthday  already exist ')
+  else{
+    const newInfoUser = new InfoUser({       
+      utilisateur_id :utilisateur_id,
+   localisation :localisation,
+   birthday :birthday,
+   profession: profession,
+   tel : tel ,
+   situation : situation
+  });
+  await newInfoUser.save();
+  res.status(201).json(newInfoUser);
   }
-  const Prof= await InfoUser.findOne({utilisateur_id:utilisateur_id,profession:profession}) 
-  if (Prof){
-    res.status(400).json('Profession   already exist ')
+
   }
-  const Phone= await InfoUser.findOne({utilisateur_id:utilisateur_id,tel:tel}) 
-  if (Phone){
-    res.status(400).json('tel   already exist ')
-  }
-  const sti= await InfoUser.findOne({utilisateur_id:utilisateur_id,situation:situation}) 
-  if (sti){
-    res.status(400).json('situation   already exist ')
-  }
-  const newInfoUser = new InfoUser({       
-    utilisateur_id :utilisateur_id,
- localisation :localisation,
- birthday :birthday,
- profession: profession,
- tel : tel ,
- situation : requiresituation
-});
-await newInfoUser.save();
-res.status(201).json(newInfoUser);
-}
+  
 
 
 }
+async function getInfo(req,res,next){
+try {
+   const id = req.params.id 
+  if(!id){
+    res.status(400).json('Tous les champs sont requis ')
+  }
+else{
+  const user = await InfoUser.findOne({utilisateur_id:id}) 
+  res.status(200).json(user)
+}
+  
+} catch (error) {
+   res.status(400).json("Something went wrong")
+}
+  
 
-module.exports ={PersoInfo}
+}
+
+module.exports ={PersoInfo,getInfo}
 

@@ -6,7 +6,9 @@ const {isAuthenticate} = require("../middleware/auth");
 const dotenv =require ('dotenv')
 dotenv.config({path:'./config/config.env'})
 
-router.post('/', InfoUserController.PersoInfo)
+router.post('/Send', InfoUserController.PersoInfo)
+
+router.get('/get/:id', InfoUserController.getInfo)
 
 
 /* GET users listing. */

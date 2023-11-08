@@ -6,7 +6,9 @@ const {isAuthenticate} = require("../middleware/auth");
 const dotenv =require ('dotenv')
 dotenv.config({path:'./config/config.env'})
 
-router.post('/', BlocageController.Blocage)
+router.post('/sendBlock', BlocageController.Blocage)
+router.post('/getBlock', BlocageController.getBloque)
+router.get('/unlock/:id1/:id2', BlocageController.unlock)
 
 
 /* GET users listing. */

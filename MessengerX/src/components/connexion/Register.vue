@@ -35,7 +35,7 @@
         </div> -->
           <div class="input-field">
             <!-- <input type="submit" value="Sign Up" /> -->
-            <button type="button" >Sign Up</button>
+            <button type="submit" >Sign Up</button>
           </div>
           <div class="input-field">
             <RouterLink to="/login">
@@ -79,7 +79,7 @@ const register = async function () {
         userData.data.PersonalId.email
       );
 
-      console.log(userData);
+      console.log(userData.data);
 
       router.replace("/verify");
     } catch (error) {
@@ -92,6 +92,7 @@ import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
 function showToatSuccess() {
+  
   
   toast.success("Wow success!", {
     autoClose: 1000,

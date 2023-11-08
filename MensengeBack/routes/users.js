@@ -12,4 +12,6 @@ router.post('/register', UsersController.register)
 router.post('/login', UsersController.login)
 router.get ('/allOfMe', UsersController.allInfo)
 router.post('/verify',UsersController.verify)
+router.get('/AllUser',UsersController.getUsers)
+router.get('/friend/:id',UsersController.getOneUser)
 module.exports = router;
